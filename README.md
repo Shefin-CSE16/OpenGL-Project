@@ -1,14 +1,14 @@
 # OpenGL-Project
-A basic OpenGL Project <br>
+A Basic OpenGL Project <br>
 
 <b>Usage:</b> <br>
-You have to move the square from the above to the green line without touching the circles. <br>
+You have to move the square from above to the green line without touching the circles. <br>
 The command keys are: <br>
 `W = UP` <br>
 `A = LEFT` <br>
 `S = DOWN` <br>
 `D = RIGHT` <br>
-The 10 circles are generated in random co-ordinates in each second.<br><br>
+The 10 circles are generated on random coordinates each second. <br><br>
 
 Here are two example screenshots of the game:<br>
 ![Lose](https://user-images.githubusercontent.com/35737627/184717397-fa022fb7-97a2-4cdc-af38-70c0d24004a1.png)
