@@ -3,6 +3,11 @@ A basic OpenGL Project <br>
 
 <b>Usage:</b> <br>
 You have to move the square from the above to the green line without touching the circles. <br>
+The command keys are: <br>
+`W = UP` <br>
+`A = LEFT` <br>
+`S = DOWN` <br>
+`D = RIGHT` <br>
 The 10 circles are generated in random co-ordinates in each second.<br><br>
 
 Here are two example screenshots of the game:<br>
