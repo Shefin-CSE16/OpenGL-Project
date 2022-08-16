@@ -8,6 +8,7 @@ The command keys are: <br>
 `A = LEFT` <br>
 `S = DOWN` <br>
 `D = RIGHT` <br>
+`ESC/E = EXIT` <br>
 The 10 circles are generated on random coordinates each second. <br><br>
 
 Here are two example screenshots of the game:<br>

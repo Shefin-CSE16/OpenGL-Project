@@ -1,35 +1,43 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// #include "windows.h" // for windows
-
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
-
-#include <stdlib.h>
 #include <GL/freeglut.h>
+//#include "windows.h" // for windows
+#include <GL/glut.h>
+#include <stdlib.h>
 
 
 static int slices = 16;
 static int stacks = 16;
 
 mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
+
 // returns a random real number in [l, r] range
-inline double gen_random(double l, double r) {
+inline double gen_random(double l, double r)
+{
     return uniform_real_distribution<double>(l, r)(rng);
 }
 
 const double width = 0.1, PI  = acos(-1.0), radius = 0.05;
 double cur_x = 0.0, cur_y = 1.0;
 auto current_time = clock();
-vector <pair<double, double>> bombs;
+
 bool GAME_FREEZE = false;
 int step = 0;
 
-inline bool isValid(double x) {
+struct point
+{
+    double x, y;
+};
+
+vector <point> bombs;
+
+void game_exit(int time) {
+    exit(0);
+}
+
+inline bool isValid(double x)
+{
     return x>=-1.0 && x<=1.0;
 }
 
@@ -44,15 +52,18 @@ void showStepCount()
     // Number to string
     int tmp = step;
     string digit;
-    while(tmp) {
+    while(tmp)
+    {
         digit += tmp%10 + '0';
         tmp/=10;
     }
     reverse(digit.begin(), digit.end());
-    if(digit.empty()) digit += "0";
+    if(digit.empty())
+        digit += "0";
 
     int idx = 12;
-    for(auto &d : digit) msg[idx++] = d;
+    for(auto &d : digit)
+        msg[idx++] = d;
     msg[idx] = '\0';
 
     glutBitmapString(GLUT_BITMAP_HELVETICA_18, msg);
@@ -60,8 +71,10 @@ void showStepCount()
 
 void showTextMessage(const unsigned char msg[], char ch)
 {
-    if(ch == 'g') glColor3f(0.0f, 1.0f, 0.0f);
-    if(ch == 'r') glColor3f(1.0f, 0.0f, 0.0f);
+    if(ch == 'g')
+        glColor3f(0.0f, 1.0f, 0.0f);
+    if(ch == 'r')
+        glColor3f(1.0f, 0.0f, 0.0f);
 
     glRasterPos2f(-0.3, 0);
 
@@ -74,31 +87,35 @@ void create_me(double lx, double ly)
 
     // The Square
     glBegin(GL_POLYGON);
-        glColor3f(1.0, 0.0, 0.0);
-        glVertex2f(lx, ly);
+    glColor3f(1.0, 0.0, 0.0);
+    glVertex2f(lx, ly);
 
-        glVertex2f(lx+width, ly);
+    glVertex2f(lx+width, ly);
 
-        glColor3f(0.0, 0.0, 1.0);
-        glVertex2f(lx+width, ly-width);
+    glColor3f(0.0, 0.0, 1.0);
+    glVertex2f(lx+width, ly-width);
 
-        glColor3f(0.0, 1.0, 0.0);
-        glVertex2f(lx, ly-width);
+    glColor3f(0.0, 1.0, 0.0);
+    glVertex2f(lx, ly-width);
     glEnd();
 
     // Thin Green Line
     glBegin(GL_POLYGON);
-        glColor3f(0.0, 1.0, 0.0);
-        glVertex2f(-1.0, -0.98);
-        glVertex2f(1.0, -0.98);
-        glVertex2f(1.0, -1.0);
-        glVertex2f(-1.0, -1.0);
+    glColor3f(0.0, 1.0, 0.0);
+    glVertex2f(-1.0, -0.98);
+    glVertex2f(1.0, -0.98);
+    glVertex2f(1.0, -1.0);
+    glVertex2f(-1.0, -1.0);
     glEnd();
 }
 
-double sq(double x) {return x*x;}
+double sq(double x)
+{
+    return x*x;
+}
 
-double dist(double x1, double y1, double x2, double y2) {
+double dist(double x1, double y1, double x2, double y2)
+{
     return sqrtl(sq(x1-x2) + sq(y1-y2));
 }
 
@@ -107,11 +124,16 @@ bool killed(double x, double y)
     double sq_cx = cur_x + width/2, sq_cy = cur_y - width/2;
     double sq_r = width/sqrtl(2);
 
-    if(dist(x, y, sq_cx, sq_cy) <= sq_r+radius) return true;
-    else return false;
+    if(dist(x, y, sq_cx, sq_cy) <= sq_r+radius) {
+        //glutTimerFunc(2500, game_exit, clock());
+        return true;
+    }
+    else
+        return false;
 }
 
-void drawFilledCircle(double x, double y, double radius){
+void drawFilledCircle(double x, double y, double radius)
+{
     int i;
     int triangleAmount = 20; //# of triangles used to draw circle
 
@@ -119,16 +141,16 @@ void drawFilledCircle(double x, double y, double radius){
     double twicePi = 2.0f * PI;
 
     glBegin(GL_TRIANGLE_FAN);
-        glColor3f(1.0, 0.0, 0.0);
+    glColor3f(1.0, 0.0, 0.0);
 
-        glVertex2f(x, y); // center of circle
-        for(i = 0; i <= triangleAmount; i++)
-        {
-            glVertex2f(
-                x + (radius * cos(i *  twicePi / triangleAmount)),
-                y + (radius * sin(i * twicePi / triangleAmount))
-            );
-        }
+    glVertex2f(x, y); // center of circle
+    for(i = 0; i <= triangleAmount; i++)
+    {
+        glVertex2f(
+            x + (radius * cos(i *  twicePi / triangleAmount)),
+            y + (radius * sin(i * twicePi / triangleAmount))
+        );
+    }
     glEnd();
 }
 
@@ -139,7 +161,8 @@ void render_bomb(double x, double y)
 
 void create_bomb(int time)
 {
-    if(GAME_FREEZE) return;
+    if(GAME_FREEZE)
+        return;
     cerr << "BOMB!!!" << endl;
 
     glClear(GL_COLOR_BUFFER_BIT);
@@ -148,16 +171,20 @@ void create_bomb(int time)
     // Creating ME AGAIN
     create_me(cur_x, cur_y);
 
-    int bomb_cnt = 10;
-    while(bomb_cnt--) {
-        double x = gen_random(-0.9, 0.9), y = gen_random(-0.9, 0.9);
+    int bomb_cnt = 15;
+    while(bomb_cnt--)
+    {
+        double x = gen_random(-1.0+radius, 1.0-radius), y = gen_random(-0.97+radius, 1.0-radius);
         //cerr << x << " " << y << endl;
         render_bomb(x, y);
         bombs.push_back({x, y});
     }
 
-    for(auto &[x, y] : bombs) {
-        if(killed(x, y)) {
+    point p;
+    for(auto p : bombs)
+    {
+        if(killed(p.x, p.y))
+        {
             cerr << "GAME OVER!!" << endl;
 
             GAME_FREEZE = true;
@@ -170,7 +197,7 @@ void create_bomb(int time)
 
     // For Timer
     current_time = clock();
-    glutTimerFunc(1000, create_bomb, current_time);
+    glutTimerFunc(500, create_bomb, current_time);
 }
 
 void gen_display()
@@ -180,17 +207,17 @@ void gen_display()
     glutSwapBuffers();
 }
 
-void game_over(int time) {
-    exit(0);
-}
-
 void updateOnKeyPress()
 {
+    if(GAME_FREEZE)
+        return;
+
     glClear(GL_COLOR_BUFFER_BIT);
 
     step++;
 
-    if(cur_y-width <= -0.98) {
+    if(cur_y-width <= -0.98)
+    {
         cerr << "REACHED!" << endl;
         GAME_FREEZE = true;
 
@@ -199,10 +226,13 @@ void updateOnKeyPress()
     }
 
     create_me(cur_x, cur_y);
-    for(auto &[x, y] : bombs) render_bomb(x, y);
+    for(auto p : bombs)
+        render_bomb(p.x, p.y);
 
-    for(auto &[x, y] : bombs) {
-        if(killed(x, y)) {
+    for(auto p : bombs)
+    {
+        if(killed(p.x, p.y))
+        {
             GAME_FREEZE = true;
             const unsigned char msg[] = "YOU HAVE LOST!!!";
             showTextMessage(msg, 'r');
@@ -212,32 +242,42 @@ void updateOnKeyPress()
     glutSwapBuffers();
 }
 
-void keyPressed (unsigned char key, int x, int y) {
-    if(GAME_FREEZE) return;
-
-    if(key == 'd') {
+void keyPressed (unsigned char key, int x, int y)
+{
+    if(key == 'd')
+    {
         cerr << "Right" << endl;
 
-        if(isValid(cur_x+width + width)) cur_x += width;
+        if(isValid(cur_x+width + width))
+            cur_x += width;
         updateOnKeyPress();
     }
-    else if(key == 'a') {
+    else if(key == 'a')
+    {
         cerr << "Left" << endl;
 
-        if(isValid(cur_x-width)) cur_x -= width;
+        if(isValid(cur_x-width))
+            cur_x -= width;
         updateOnKeyPress();
     }
-    else if(key == 'w') {
+    else if(key == 'w')
+    {
         cerr << "Up" << endl;
 
-        if(isValid(cur_y+width)) cur_y += width;
+        if(isValid(cur_y+width))
+            cur_y += width;
         updateOnKeyPress();
     }
-    else if(key == 's') {
+    else if(key == 's')
+    {
         cerr << "Down" << endl;
 
-        if(isValid(cur_y-width - width)) cur_y -= width;
+        if(isValid(cur_y-width - width))
+            cur_y -= width;
         updateOnKeyPress();
+    }
+    else if(key == 'e' || key == (char)27) {
+        game_exit(0);
     }
 }
 
