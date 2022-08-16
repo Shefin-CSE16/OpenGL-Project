@@ -2,13 +2,9 @@
 using namespace std;
 
 #include <GL/freeglut.h>
-//#include "windows.h" // for windows
+#include "windows.h"
 #include <GL/glut.h>
 #include <stdlib.h>
-
-
-static int slices = 16;
-static int stacks = 16;
 
 mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
 
@@ -244,7 +240,7 @@ void updateOnKeyPress()
 
 void keyPressed (unsigned char key, int x, int y)
 {
-    if(key == 'd')
+    if(key == 'd' || key == 'D')
     {
         cerr << "Right" << endl;
 
@@ -252,7 +248,7 @@ void keyPressed (unsigned char key, int x, int y)
             cur_x += width;
         updateOnKeyPress();
     }
-    else if(key == 'a')
+    else if(key == 'a' || key == 'A')
     {
         cerr << "Left" << endl;
 
@@ -260,7 +256,7 @@ void keyPressed (unsigned char key, int x, int y)
             cur_x -= width;
         updateOnKeyPress();
     }
-    else if(key == 'w')
+    else if(key == 'w' || key == 'W')
     {
         cerr << "Up" << endl;
 
@@ -268,7 +264,7 @@ void keyPressed (unsigned char key, int x, int y)
             cur_y += width;
         updateOnKeyPress();
     }
-    else if(key == 's')
+    else if(key == 's' || key == 'S')
     {
         cerr << "Down" << endl;
 
@@ -276,7 +272,7 @@ void keyPressed (unsigned char key, int x, int y)
             cur_y -= width;
         updateOnKeyPress();
     }
-    else if(key == 'e' || key == (char)27) {
+    else if(key == 'e' || key == 'E' || key == (char)27) {
         game_exit(0);
     }
 }
